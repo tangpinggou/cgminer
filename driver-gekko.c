@@ -729,6 +729,7 @@ static bool compac_init(struct thr_info *thr)
 			break;
 		case IDENT_BSD:
 		case IDENT_GSD:
+		case IDENT_RM:
 			info->frequency_requested = opt_gekko_gsd_freq;
 			info->frequency_start = opt_gekko_start_freq;
 			break;
@@ -928,6 +929,7 @@ static struct cgpu_info *compac_detect_one(struct libusb_device *dev, struct usb
 		exclude_me |= (info->ident == IDENT_GSC && !opt_gekko_gsc_detect);
 		exclude_me |= (info->ident == IDENT_BSD && !opt_gekko_gsd_detect);
 		exclude_me |= (info->ident == IDENT_GSD && !opt_gekko_gsd_detect);
+		exclude_me |= (info->ident == IDENT_RM && !opt_gekko_gsd_detect);
 		exclude_me |= (info->ident == IDENT_BSE && !opt_gekko_gse_detect);
 		exclude_me |= (info->ident == IDENT_GSE && !opt_gekko_gse_detect);
 		exclude_me |= (info->ident == IDENT_GSH && !opt_gekko_gsh_detect);
@@ -949,6 +951,7 @@ static struct cgpu_info *compac_detect_one(struct libusb_device *dev, struct usb
 		case IDENT_GSC:
 		case IDENT_BSD:
 		case IDENT_GSD:
+		case IDENT_RM:
 		case IDENT_BSE:
 		case IDENT_GSE:
 			info->asic_type = BM1384;
@@ -1068,7 +1071,7 @@ static bool compac_prepare(struct thr_info *thr)
 
 		if (!miner_ok) {
 			applog(LOG_WARNING, "%s %d: found 0 chip(s)", compac->drv->name, compac->device_id);
-			if (info->ident == IDENT_BSD || info->ident == IDENT_GSD) {
+			if (info->ident == IDENT_BSD || info->ident == IDENT_GSD || info->ident == IDENT_RM) {
 				//Don't bother retyring, will just waste resources.
 				compac->deven = DEV_DISABLED;
 			}
